@@ -6,27 +6,32 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    @NotNull
+    @Column(name = "title", nullable = false)
     private String title;
-    @NotNull
+    @Column(name = "author", nullable = false)
     private String author;
-    @NotNull
-    @Column(unique = true)
+    @Column(name = "isbn", unique = true, nullable = false)
     private String isbn;
-    @NotNull
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
+    @Column(name = "description")
     private String description;
+    @Column(name = "cover_image")
     private String coverImage;
 
 }

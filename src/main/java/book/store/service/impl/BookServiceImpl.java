@@ -1,5 +1,9 @@
 package book.store.service.impl;
 
+import book.store.dto.BookDto;
+import book.store.dto.CreateBookRequestDto;
+import book.store.exception.EntityNotFoundException;
+import book.store.mapper.BookMapper;
 import book.store.model.Book;
 import book.store.repository.BookRepository;
 import book.store.service.BookService;
@@ -11,14 +15,25 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
-    public Book save(Book book) {
-        return bookRepository.save(book);
+    public BookDto save(CreateBookRequestDto createBookRequestDto) {
+        Book modelBook = bookMapper.toModel(createBookRequestDto);
+        return bookMapper.toDto(bookRepository.save(modelBook));
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public List<BookDto> findAll() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public BookDto findById(Long id) {
+        return bookMapper.toDto(
+                bookRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find book with id: " + id)));
     }
 }

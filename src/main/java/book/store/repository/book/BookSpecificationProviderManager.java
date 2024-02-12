@@ -1,5 +1,6 @@
 package book.store.repository.book;
 
+import book.store.exception.SpecificationProviderNotFoundException;
 import book.store.model.Book;
 import book.store.repository.SpecificationProvider;
 import book.store.repository.SpecificationProviderManager;
@@ -18,7 +19,7 @@ public class BookSpecificationProviderManager implements SpecificationProviderMa
                 .filter(sp -> sp.getKey().equals(key))
                 .findFirst()
                 .orElseThrow(
-                        () -> new RuntimeException(
+                        () -> new SpecificationProviderNotFoundException(
                                 "Can't get any proper SpecificationProvider by key: " + key));
     }
 }

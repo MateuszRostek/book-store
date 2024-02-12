@@ -1,11 +1,12 @@
 package book.store.service.impl;
 
 import book.store.dto.BookDto;
+import book.store.dto.BookSearchParametersDto;
 import book.store.dto.CreateBookRequestDto;
 import book.store.exception.EntityNotFoundException;
 import book.store.mapper.BookMapper;
 import book.store.model.Book;
-import book.store.repository.BookRepository;
+import book.store.repository.book.BookRepository;
 import book.store.service.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,10 @@ public class BookServiceImpl implements BookService {
         Book modelBook = bookMapper.toModel(book);
         modelBook.setId(id);
         return bookMapper.toDto(bookRepository.save(modelBook));
+    }
+
+    @Override
+    public List<BookDto> search(BookSearchParametersDto searchParametersDto) {
+        return null;
     }
 }

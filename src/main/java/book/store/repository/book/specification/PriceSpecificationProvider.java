@@ -2,7 +2,7 @@ package book.store.repository.book.specification;
 
 import book.store.model.Book;
 import book.store.repository.SpecificationProvider;
-import java.util.Arrays;
+import java.math.BigDecimal;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +12,14 @@ public class PriceSpecificationProvider implements SpecificationProvider<Book> {
 
     @Override
     public Specification<Book> getSpecification(String[] params) {
+        BigDecimal minPrice = params[0] != null
+                ? new BigDecimal(params[0])
+                : BigDecimal.ZERO;
+        BigDecimal maxPrice = params[1] != null
+                ? new BigDecimal(params[1])
+                : BigDecimal.valueOf(Double.MAX_VALUE);
         return (root, query, criteriaBuilder) ->
-                root.get(FIELD_NAME).in(Arrays.stream(params).toArray());
+                criteriaBuilder.between(root.get(FIELD_NAME), minPrice, maxPrice);
     }
 
     @Override

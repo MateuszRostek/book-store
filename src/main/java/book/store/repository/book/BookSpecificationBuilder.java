@@ -21,7 +21,8 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
         Map<String, String[]> parametersMap = new HashMap<>();
         parametersMap.put("title", searchParametersDto.titles());
         parametersMap.put("author", searchParametersDto.authors());
-        parametersMap.put("price", searchParametersDto.prices());
+        parametersMap.put("price",
+                new String[]{searchParametersDto.minPrice(), searchParametersDto.maxPrice()});
 
         for (Map.Entry<String, String[]> entry : parametersMap.entrySet()) {
             String[] paramValues = entry.getValue();

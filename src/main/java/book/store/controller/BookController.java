@@ -50,8 +50,10 @@ public class BookController {
                     + " by providing relevant search criteria"
     )
     @GetMapping("/search")
-    public List<BookDto> searchBooks(BookSearchParametersDto searchParametersDto) {
-        return bookService.search(searchParametersDto);
+    public List<BookDto> searchBooks(
+            Pageable pageable,
+            BookSearchParametersDto searchParametersDto) {
+        return bookService.search(pageable, searchParametersDto);
     }
 
     @Operation(

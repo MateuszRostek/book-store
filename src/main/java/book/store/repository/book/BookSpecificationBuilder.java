@@ -1,6 +1,6 @@
 package book.store.repository.book;
 
-import book.store.dto.BookSearchParametersDto;
+import book.store.dto.book.BookSearchParametersDto;
 import book.store.model.Book;
 import book.store.repository.SpecificationBuilder;
 import book.store.repository.SpecificationProviderManager;

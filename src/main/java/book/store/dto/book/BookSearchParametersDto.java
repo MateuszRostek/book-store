@@ -1,4 +1,4 @@
-package book.store.dto;
+package book.store.dto.book;
 
 public record BookSearchParametersDto(
         String[] titles,

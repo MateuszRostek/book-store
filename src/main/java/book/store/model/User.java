@@ -9,12 +9,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
+@Where(clause = "is_deleted=false")
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id=?")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +34,6 @@ public class User {
     private String lastName;
     @Column(name = "shipping_address")
     private String shippingAddress;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
 }

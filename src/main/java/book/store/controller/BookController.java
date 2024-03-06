@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class BookController {
             summary = "Retrieve all books",
             description = "Get a paginated and sorted list of all available books")
     @GetMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<BookDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
@@ -40,6 +42,7 @@ public class BookController {
             summary = "Retrieve a book by ID",
             description = "Get information about a specific book based on its unique identifier.")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
@@ -50,6 +53,7 @@ public class BookController {
                     + " by providing relevant search criteria"
     )
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<BookDto> searchBooks(
             Pageable pageable,
             BookSearchParametersDto searchParametersDto) {
@@ -61,6 +65,7 @@ public class BookController {
             description = "Create and save a new book by including the required book details"
                     + " in the request body.")
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
@@ -70,6 +75,7 @@ public class BookController {
             description = "Modify the details of an existing book identified by its ID."
                     + " Requires book details in the request body.")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public BookDto updateBookById(
             @PathVariable Long id,
             @RequestBody @Valid CreateBookRequestDto bookDto) {
@@ -81,6 +87,7 @@ public class BookController {
             description = "Remove a book from the collection based on its unique identifier.")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteById(id);
     }

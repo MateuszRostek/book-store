@@ -3,3 +3,11 @@ databaseChangeLog:
       file: /db/changelog/changes/01-create-books-table.yaml
   - include:
       file: /db/changelog/changes/02-create-users-table.yaml
+  - include:
+      file: /db/changelog/changes/03-create-roles-table.yaml
+  - include:
+      file: /db/changelog/changes/04-create-users-roles-table.yaml
+  - include:
+      file: /db/changelog/changes/05-insert-roles-to-role-table.yaml
+  - include:
+      file: /db/changelog/changes/06-insert-users-to-users-table.yaml

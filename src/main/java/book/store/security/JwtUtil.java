@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
-    private Key secret;
+    private final Key secret;
 
     public JwtUtil(@Value("${jwt.secret}") String secretString) {
         secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
@@ -42,7 +42,7 @@ public class JwtUtil {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    private <T> T getClaimFromToken (String token, Function<Claims, T> claimsResolver) {
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secret)
                 .build()

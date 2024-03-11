@@ -35,7 +35,7 @@ public class BookController {
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<BookDto> getAll(Pageable pageable) {
-        return bookService.findAll(pageable);
+        return bookService.findAllWithCategories(pageable);
     }
 
     @Operation(
@@ -44,7 +44,7 @@ public class BookController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public BookDto getBookById(@PathVariable Long id) {
-        return bookService.findById(id);
+        return bookService.findByIdWithCategories(id);
     }
 
     @Operation(

@@ -64,9 +64,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDtoWithoutCategoryIds> findAllByCategoryId(Long categoryId) {
-        return bookRepository.findAllByCategoryId(categoryId).stream()
+    public List<BookDtoWithoutCategoryIds> findAllByCategoryId(
+            Long categoryId, Pageable pageable) {
+        return bookRepository.findAllByCategoryId(categoryId, pageable).stream()
                 .map(bookMapper::toDtoWithoutCategories)
+                .toList();
+    }
+
+    @Override
+    public BookDto findByIdWithCategories(Long id) {
+        return bookMapper.toDto(
+                bookRepository.findByIdWithCategories(id).orElseThrow(
+                        () -> new EntityNotFoundException("Can't find book with id: " + id)));
+    }
+
+    @Override
+    public List<BookDto> findAllWithCategories(Pageable pageable) {
+        return bookRepository.findAllWithCategories(pageable).stream()
+                .map(bookMapper::toDto)
                 .toList();
     }
 }

@@ -6,39 +6,30 @@ import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.book.CreateBookRequestDto;
 import book.store.model.Book;
 import book.store.model.Category;
-import java.util.Set;
 import java.util.stream.Collectors;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface BookMapper {
-    @Mapping(target = "categoryIds", source = "categories", qualifiedByName = "getIdsFromCategories")
     BookDto toDto(Book book);
 
-    @Mapping(target = "categories", source = "categoryIds", qualifiedByName = "getCategoriesFromIds")
     Book toModel(CreateBookRequestDto createBookRequestDto);
 
     BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
 
-    @Named("getIdsFromCategories")
-    default Set<Long> getIdsFromCategories(Set<Category> categories) {
-        if (categories == null) {
-            return null;
-        }
-        return categories.stream()
+    @AfterMapping
+    default void setCategoryIds(@MappingTarget BookDto bookDto, Book book) {
+        bookDto.setCategoryIds(book.getCategories().stream()
                 .map(Category::getId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
     }
 
-    @Named("getCategoriesFromIds")
-    default Set<Category> getCategoriesFromIds(Set<Long> ids) {
-        if (ids == null) {
-            return null;
-        }
-        return ids.stream()
+    @AfterMapping
+    default void setIdCategories(@MappingTarget Book book, CreateBookRequestDto requestDto) {
+        book.setCategories(requestDto.categoryIds().stream()
                 .map(Category::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
     }
 }

@@ -5,9 +5,6 @@ import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.book.BookSearchParametersDto;
 import book.store.dto.book.CreateBookRequestDto;
 import java.util.List;
-
-import book.store.model.Book;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {

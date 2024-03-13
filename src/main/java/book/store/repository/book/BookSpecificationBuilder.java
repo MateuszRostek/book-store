@@ -4,6 +4,7 @@ import book.store.dto.book.BookSearchParametersDto;
 import book.store.model.Book;
 import book.store.repository.SpecificationBuilder;
 import book.store.repository.SpecificationProviderManager;
+import jakarta.persistence.criteria.JoinType;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,11 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
                                 .getSpecification(paramValues));
             }
         }
+        specification = specification.and((root, query, cb) -> {
+            root.fetch("categories", JoinType.LEFT);
+            query.distinct(true);
+            return null;
+        });
         return specification;
     }
 }

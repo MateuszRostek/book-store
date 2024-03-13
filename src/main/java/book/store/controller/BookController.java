@@ -1,6 +1,7 @@
 package book.store.controller;
 
 import book.store.dto.book.BookDto;
+import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.book.BookSearchParametersDto;
 import book.store.dto.book.CreateBookRequestDto;
 import book.store.service.book.BookService;
@@ -54,7 +55,7 @@ public class BookController {
     )
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public List<BookDto> searchBooks(
+    public List<BookDtoWithoutCategoryIds> searchBooks(
             Pageable pageable,
             BookSearchParametersDto searchParametersDto) {
         return bookService.search(pageable, searchParametersDto);

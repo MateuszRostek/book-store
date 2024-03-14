@@ -39,11 +39,9 @@ public class UserServiceImpl implements UserService {
         }
         User modelUser = userMapper.toModel(requestDto);
         modelUser.setPassword(passwordEncoder.encode(requestDto.password()));
-        Set<Role> roles = new HashSet<>();
         Role defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME)
                 .orElseThrow(() -> new RegistrationException("Can't find default role"));
-        roles.add(defaultRole);
-        modelUser.setRoles(roles);
+        modelUser.setRoles(Set.of(defaultRole));
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(modelUser);
         shoppingCart.setCartItems(new HashSet<>());

@@ -9,7 +9,6 @@ import book.store.model.User;
 import book.store.repository.role.RoleRepository;
 import book.store.repository.user.UserRepository;
 import book.store.service.user.UserService;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,11 +32,9 @@ public class UserServiceImpl implements UserService {
         }
         User modelUser = userMapper.toModel(requestDto);
         modelUser.setPassword(passwordEncoder.encode(requestDto.password()));
-        Set<Role> roles = new HashSet<>();
         Role defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME)
                 .orElseThrow(() -> new RegistrationException("Can't find default role"));
-        roles.add(defaultRole);
-        modelUser.setRoles(roles);
+        modelUser.setRoles(Set.of(defaultRole));
         return userMapper.toDto(userRepository.save(modelUser));
     }
 }

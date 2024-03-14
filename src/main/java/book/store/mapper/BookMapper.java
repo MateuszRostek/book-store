@@ -6,7 +6,6 @@ import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.book.CreateBookRequestDto;
 import book.store.model.Book;
 import book.store.model.Category;
-
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;

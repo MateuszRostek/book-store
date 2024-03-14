@@ -31,8 +31,8 @@ public class ShoppingCart {
     @Column(name = "id")
     private Long id;
     @OneToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private Set<CartItem> cartItems = new HashSet<>();
     @Column(name = "is_deleted", nullable = false)

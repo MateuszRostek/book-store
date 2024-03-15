@@ -1,6 +1,7 @@
 package book.store.controller;
 
 import book.store.dto.book.BookDto;
+import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.book.BookSearchParametersDto;
 import book.store.dto.book.CreateBookRequestDto;
 import book.store.service.book.BookService;
@@ -35,7 +36,7 @@ public class BookController {
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<BookDto> getAll(Pageable pageable) {
-        return bookService.findAll(pageable);
+        return bookService.findAllWithCategories(pageable);
     }
 
     @Operation(
@@ -44,7 +45,7 @@ public class BookController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public BookDto getBookById(@PathVariable Long id) {
-        return bookService.findById(id);
+        return bookService.findByIdWithCategories(id);
     }
 
     @Operation(
@@ -54,7 +55,7 @@ public class BookController {
     )
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public List<BookDto> searchBooks(
+    public List<BookDtoWithoutCategoryIds> searchBooks(
             Pageable pageable,
             BookSearchParametersDto searchParametersDto) {
         return bookService.search(pageable, searchParametersDto);
@@ -66,6 +67,7 @@ public class BookController {
                     + " in the request body.")
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookDto) {
         return bookService.save(bookDto);
     }

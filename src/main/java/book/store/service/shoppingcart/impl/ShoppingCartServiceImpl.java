@@ -25,13 +25,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemMapper cartItemMapper;
 
     @Override
-    public ShoppingCartDto getCartWithCartItems(Long userId) {
-        return cartMapper.toDto(cartRepository.findCartWithItems(userId));
+    public ShoppingCartDto getCartWithItems(Long userId) {
+        return cartMapper.toDto(cartRepository.findCartWithItemsByUserId(userId));
     }
 
     @Override
-    public ShoppingCartDto addCartItemToCart(Long userId, CreateCartItemRequestDto requestDto) {
-        ShoppingCart modelCart = cartRepository.findCartWithItems(userId);
+    public ShoppingCartDto addItemToCart(Long userId, CreateCartItemRequestDto requestDto) {
+        ShoppingCart modelCart = cartRepository.findCartWithItemsByUserId(userId);
         CartItem modelCartItem = cartItemMapper.toModel(requestDto);
         Optional<CartItem> existingItem = modelCart.getCartItems().stream()
                 .filter(ci -> ci.getBook().getId().equals(modelCartItem.getBook().getId()))
@@ -48,8 +48,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public CartItemDto updateCartItemQuantityInCart(
-            UpdateCartItemRequestDto requestDto, Long cartItemId) {
+    public CartItemDto updateItemQuantity(
+            Long cartItemId, UpdateCartItemRequestDto requestDto) {
         CartItem modelCartItem = cartItemRepository.findById(cartItemId).orElseThrow(
                 () -> new EntityNotFoundException("Can't find cart item with id: " + cartItemId));
         modelCartItem.setQuantity(requestDto.quantity());
@@ -57,7 +57,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteCartItemFromCart(Long cartItemId) {
+    public void deleteItemFromCart(Long cartItemId) {
         cartItemRepository.deleteById(cartItemId);
     }
 }

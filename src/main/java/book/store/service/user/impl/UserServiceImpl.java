@@ -11,7 +11,6 @@ import book.store.repository.role.RoleRepository;
 import book.store.repository.shoppingcart.ShoppingCartRepository;
 import book.store.repository.user.UserRepository;
 import book.store.service.user.UserService;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -44,7 +43,6 @@ public class UserServiceImpl implements UserService {
         modelUser.setRoles(Set.of(defaultRole));
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(modelUser);
-        shoppingCart.setCartItems(new HashSet<>());
         User savedUser = userRepository.save(modelUser);
         shoppingCartRepository.save(shoppingCart);
         return userMapper.toDto(savedUser);

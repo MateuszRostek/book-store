@@ -38,9 +38,9 @@ public class ShoppingCartController {
                     + " with its associated cart items.")
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public ShoppingCartDto getCartWithCartItems(Authentication authentication) {
+    public ShoppingCartDto getCartWithItems(Authentication authentication) {
         User user = userService.getUserFromAuthentication(authentication);
-        return cartService.getCartWithCartItems(user.getId());
+        return cartService.getCartWithItems(user.getId());
     }
 
     @Operation(
@@ -50,11 +50,11 @@ public class ShoppingCartController {
     @PostMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public ShoppingCartDto addCartItemToCart(
+    public ShoppingCartDto addItemToCart(
             Authentication authentication,
             @RequestBody @Valid CreateCartItemRequestDto requestDto) {
         User user = userService.getUserFromAuthentication(authentication);
-        return cartService.addCartItemToCart(user.getId(), requestDto);
+        return cartService.addItemToCart(user.getId(), requestDto);
     }
 
     @Operation(
@@ -64,10 +64,10 @@ public class ShoppingCartController {
     )
     @PutMapping("/cart-items/{cartItemId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public CartItemDto updateCartItemQuantityInCart(
+    public CartItemDto updateItemQuantity(
             @RequestBody @Valid UpdateCartItemRequestDto requestDto,
             @PathVariable Long cartItemId) {
-        return cartService.updateCartItemQuantityInCart(requestDto, cartItemId);
+        return cartService.updateItemQuantity(cartItemId, requestDto);
     }
 
     @Operation(
@@ -77,7 +77,7 @@ public class ShoppingCartController {
     @DeleteMapping("/cart-items/{cartItemId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCartItemFromCart(@PathVariable Long cartItemId) {
-        cartService.deleteCartItemFromCart(cartItemId);
+    public void deleteItemFromCart(@PathVariable Long cartItemId) {
+        cartService.deleteItemFromCart(cartItemId);
     }
 }

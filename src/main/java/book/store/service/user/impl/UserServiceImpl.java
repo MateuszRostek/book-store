@@ -5,14 +5,18 @@ import book.store.dto.user.UserResponseDto;
 import book.store.exception.RegistrationException;
 import book.store.mapper.UserMapper;
 import book.store.model.Role;
+import book.store.model.ShoppingCart;
 import book.store.model.User;
 import book.store.repository.role.RoleRepository;
+import book.store.repository.shoppingcart.ShoppingCartRepository;
 import book.store.repository.user.UserRepository;
 import book.store.service.user.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +24,11 @@ public class UserServiceImpl implements UserService {
     private static final Role.RoleName DEFAULT_ROLE_NAME = Role.RoleName.USER;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
@@ -35,6 +41,15 @@ public class UserServiceImpl implements UserService {
         Role defaultRole = roleRepository.findByName(DEFAULT_ROLE_NAME)
                 .orElseThrow(() -> new RegistrationException("Can't find default role"));
         modelUser.setRoles(Set.of(defaultRole));
-        return userMapper.toDto(userRepository.save(modelUser));
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(modelUser);
+        User savedUser = userRepository.save(modelUser);
+        shoppingCartRepository.save(shoppingCart);
+        return userMapper.toDto(savedUser);
+    }
+
+    @Override
+    public User getUserFromAuthentication(Authentication authentication) {
+        return (User) authentication.getPrincipal();
     }
 }

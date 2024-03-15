@@ -50,4 +50,8 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     @Column(name = "categories")
     private Set<Category> categories = new HashSet<>();
+
+    public Book(Long id) {
+        this.id = id;
+    }
 }

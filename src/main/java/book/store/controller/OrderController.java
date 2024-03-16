@@ -38,14 +38,19 @@ public class OrderController {
 
     @GetMapping("/{orderId}/items")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public List<OrderItemDto> getAllItemsFromOrder(@PathVariable Long orderId) {
-        return orderService.getAllItemsFromOrder(orderId);
+    public List<OrderItemDto> getAllItemsFromOrder(
+            Authentication authentication, @PathVariable Long orderId) {
+        User user = userService.getUserFromAuthentication(authentication);
+        return orderService.getAllItemsFromOrder(user.getId(), orderId);
     }
 
     @GetMapping("/{orderId}/items/{itemId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public OrderItemDto getItemFromOrder(@PathVariable Long orderId, @PathVariable Long itemId) {
-        return orderService.getItemFromOrder(orderId, itemId);
+    public OrderItemDto getItemFromOrder(
+            Authentication authentication,
+            @PathVariable Long orderId, @PathVariable Long itemId) {
+        User user = userService.getUserFromAuthentication(authentication);
+        return orderService.getItemFromOrder(user.getId(), orderId, itemId);
     }
 
     @PostMapping
@@ -55,7 +60,7 @@ public class OrderController {
             Authentication authentication,
             @RequestBody @Valid PlaceOrderRequestDto requestDto) {
         User user = userService.getUserFromAuthentication(authentication);
-        return orderService.placeOrder(user.getId(), requestDto);
+        return orderService.placeOrder(user, requestDto);
     }
 
     @PatchMapping("/{id}")

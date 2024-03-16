@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderItemDto> getAllItemsFromOrder(Long userId, Long orderId) {
-        Order modelOrder = orderRepository.findById(orderId).orElseThrow(
+        Order modelOrder = orderRepository.findByIdWithItems(orderId).orElseThrow(
                 () -> new EntityNotFoundException("Can't find order with id: " + orderId));
         if (!modelOrder.getUser().getId().equals(userId)) {
             return null;
@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderItemDto getItemFromOrder(Long userId, Long orderId, Long itemId) {
-        Order modelOrder = orderRepository.findById(orderId).orElseThrow(
+        Order modelOrder = orderRepository.findByIdWithItems(orderId).orElseThrow(
                 () -> new EntityNotFoundException("Can't find order with id: " + orderId));
         if (!modelOrder.getUser().getId().equals(userId)) {
             return null;

@@ -16,6 +16,7 @@ services:
       - mysqldb
     restart: unless-stopped
     build: .
+#    image: application:latest
     env_file: ./.env
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
@@ -27,4 +28,4 @@ services:
         "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
         "spring.jpa.hibernate.ddl-auto" : "validate"
       }'
-      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+#      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"

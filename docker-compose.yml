@@ -3,6 +3,7 @@ version: "3.8"
 services:
   mysqldb:
     image: mysql:8.2.0
+    container_name: book-store-db
     restart: unless-stopped
     env_file: ./.env
     environment:
@@ -16,7 +17,7 @@ services:
       - mysqldb
     restart: unless-stopped
     build: .
-#    image: application:latest
+    container_name: book-store-app
     env_file: ./.env
     ports:
       - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
@@ -28,4 +29,4 @@ services:
         "spring.datasource.password" : "$MYSQLDB_ROOT_PASSWORD",
         "spring.jpa.hibernate.ddl-auto" : "validate"
       }'
-#      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"

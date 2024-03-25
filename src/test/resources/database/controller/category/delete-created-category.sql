@@ -1,0 +1,1 @@
+DELETE FROM categories WHERE name = 'Sci-fi' AND description = 'Science fiction';

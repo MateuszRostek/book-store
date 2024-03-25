@@ -1,26 +1,23 @@
 package book.store.repository.book;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import book.store.model.Book;
 import book.store.model.Category;
-import book.store.repository.category.CategoryRepository;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -41,7 +38,6 @@ public class BookRepositoryTest {
                         PageRequest.of(0, 10))
                 .stream()
                 .toList();
-
         assertEquals(2, actual.size());
     }
 
@@ -54,13 +50,11 @@ public class BookRepositoryTest {
     void findAllByCategoryId_InvalidCategoryId_ReturnsEmptyListOfBooks() {
         Long notValidCategoryId = 10L;
         List<Book> expected = new ArrayList<>();
-
         List<Book> actual = bookRepository.findAllByCategoryId(
                         notValidCategoryId,
                         PageRequest.of(0, 10))
                 .stream()
                 .toList();
-
         assertEquals(0, actual.size());
         assertEquals(expected, actual);
     }
@@ -72,11 +66,11 @@ public class BookRepositoryTest {
     @Sql(scripts = {"classpath:database/books/remove-all-books-with-categories.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findByIdWithCategories_ValidBookId_ReturnsOneBook() {
-        Long validId = 1L;
         Category expectedCategory = new Category();
         expectedCategory.setId(1L);
         expectedCategory.setName("Thriller");
         expectedCategory.setDescription("Thriller category");
+        Long validId = 1L;
         Book expected = new Book();
         expected.setId(validId);
         expected.setTitle("Basic Book");
@@ -102,9 +96,7 @@ public class BookRepositoryTest {
     void findByIdWithCategories_InvalidBookId_ReturnsEmptyOptional() {
         Long notValidId = 100L;
         Optional<Book> expected = Optional.empty();
-
         Optional<Book> actual = bookRepository.findByIdWithCategories(notValidId);
-
         assertEquals(expected, actual);
     }
 
@@ -118,7 +110,6 @@ public class BookRepositoryTest {
         List<Book> actualList = bookRepository.findAllWithCategories(
                 PageRequest.of(0, 10)).stream()
                 .toList();
-
         assertEquals(3, actualList.size());
     }
 }

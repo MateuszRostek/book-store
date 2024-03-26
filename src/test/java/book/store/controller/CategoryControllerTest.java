@@ -1,10 +1,25 @@
 package book.store.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import book.store.dto.book.BookDtoWithoutCategoryIds;
 import book.store.dto.category.CategoryDto;
 import book.store.dto.category.CreateCategoryRequestDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.AfterAll;
@@ -22,24 +37,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.sql.DataSource;
-
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CategoryControllerTest {
     protected static MockMvc mockMvc;
+    private static final String BASE_ENDPOINT = "/api/categories";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -57,7 +58,8 @@ public class CategoryControllerTest {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,
-                    new ClassPathResource("database/controller/category/add-three-default-categories.sql"));
+                    new ClassPathResource(
+                            "database/controller/category/add-three-default-categories.sql"));
         }
     }
 
@@ -72,7 +74,8 @@ public class CategoryControllerTest {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,
-                    new ClassPathResource("database/controller/category/delete-three-default-categories.sql"));
+                    new ClassPathResource(
+                            "database/controller/category/delete-three-default-categories.sql"));
         }
     }
 
@@ -85,7 +88,7 @@ public class CategoryControllerTest {
         expected.add(new CategoryDto(3L, "Horror", "Horror category"));
 
         MvcResult result = mockMvc.perform(
-                        get("/api/categories").contentType(MediaType.APPLICATION_JSON))
+                        get(BASE_ENDPOINT).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         CategoryDto[] actual = objectMapper.readValue(
@@ -101,14 +104,41 @@ public class CategoryControllerTest {
     void getCategoryById_ValidId_ReturnsCategoryDto() throws Exception {
         Long validId = 2L;
         CategoryDto expected = new CategoryDto(validId, "Romance novel", "Romance novel category");
+
         MvcResult result = mockMvc.perform(
-                        get("/api/categories/" + validId).contentType(MediaType.APPLICATION_JSON))
+                        get(BASE_ENDPOINT + "/" + validId).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         CategoryDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsByteArray(), CategoryDto.class);
+
         assertNotNull(actual);
         assertEquals(expected, actual);
+    }
+
+    @WithMockUser(username = "user", authorities = {"USER"})
+    @Test
+    @Sql(scripts = {"classpath:database/controller/category/delete-three-default-categories.sql",
+            "classpath:database/books/add-three-books-with-categories.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"classpath:database/books/remove-all-books-with-categories.sql",
+            "classpath:database/controller/category/add-three-default-categories.sql"},
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void getBooksByCategoryId_ValidCategoryId_ReturnsAllMatchingCategories() throws Exception {
+        long validCategoryId = 1L;
+        List<BookDtoWithoutCategoryIds> expected = getThreeBookDtoWithoutCategoryIds();
+
+        MvcResult result = mockMvc.perform(
+                        get(BASE_ENDPOINT + "/" + validCategoryId + "/books")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        BookDtoWithoutCategoryIds[] actual = objectMapper.readValue(
+                result.getResponse().getContentAsByteArray(), BookDtoWithoutCategoryIds[].class);
+
+        assertNotNull(actual);
+        assertEquals(2, actual.length);
+        assertEquals(expected, Arrays.stream(actual).toList());
     }
 
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
@@ -122,7 +152,7 @@ public class CategoryControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
         MvcResult result = mockMvc.perform(
-                        post("/api/categories")
+                        post(BASE_ENDPOINT)
                                 .content(jsonRequest)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -138,7 +168,7 @@ public class CategoryControllerTest {
     @Test
     @Sql(scripts = {"classpath:database/controller/category/revert-category-updated.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void updateCategory_ValidRequestDto_ReturnsUpdatedCategory() throws Exception {
+    void updateCategory_ValidRequestDtoAndId_ReturnsUpdatedCategory() throws Exception {
         Long idPassed = 2L;
         CreateCategoryRequestDto requestDto = new CreateCategoryRequestDto(
                 "Updated name", "Updated description");
@@ -147,7 +177,7 @@ public class CategoryControllerTest {
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
         MvcResult result = mockMvc.perform(
-                        put("/api/categories/" + idPassed)
+                        put(BASE_ENDPOINT + "/" + idPassed)
                                 .content(jsonRequest)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -159,18 +189,24 @@ public class CategoryControllerTest {
         EqualsBuilder.reflectionEquals(expected, actual, "id");
     }
 
-    @WithMockUser(username = "user", authorities = {"USER"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     @Test
-    @Sql(scripts = {"classpath:database/controller/category/delete-three-default-categories.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:database/books/add-three-books-with-categories.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:database/books/remove-all-books-with-categories.sql"},
+    @Sql(scripts = {"classpath:database/controller/category/revert-category-updated.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @Sql(scripts = {"classpath:database/controller/category/add-three-default-categories.sql"},
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void getBooksByCategoryId_ValidCategoryId_ReturnsAllMatchingCategories() throws Exception {
-        Long validCategoryId = 1L;
+    void deleteCategory_ValidId_ReturnsNoContentStatus() throws Exception {
+        long idPassed = 2L;
+        mockMvc.perform(delete(BASE_ENDPOINT + "/" + idPassed)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andReturn();
+        mockMvc.perform(
+                        get(BASE_ENDPOINT + "/" + idPassed)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    private List<BookDtoWithoutCategoryIds> getThreeBookDtoWithoutCategoryIds() {
         List<BookDtoWithoutCategoryIds> expected = new ArrayList<>();
         expected.add(new BookDtoWithoutCategoryIds(
                 1L,
@@ -188,17 +224,6 @@ public class CategoryControllerTest {
                 new BigDecimal("25.50"),
                 "Basic Description 2",
                 "images.com/image2.jpg"));
-
-        MvcResult result = mockMvc.perform(
-                        get("/api/categories/" + validCategoryId + "/books")
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        BookDtoWithoutCategoryIds[] actual = objectMapper.readValue(
-                result.getResponse().getContentAsByteArray(), BookDtoWithoutCategoryIds[].class);
-
-        assertNotNull(actual);
-        assertEquals(2, actual.length);
-        assertEquals(expected, Arrays.stream(actual).toList());
+        return expected;
     }
 }

@@ -1,1 +1,1 @@
-UPDATE categories SET name = 'Romance novel', description = 'Romance novel category' WHERE id=2;
+UPDATE categories SET name = 'Romance novel', description = 'Romance novel category' WHERE id = 2;

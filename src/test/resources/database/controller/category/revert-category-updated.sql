@@ -1,0 +1,1 @@
+UPDATE categories SET name = 'Romance novel', description = 'Romance novel category', is_deleted = 0 WHERE id = 2;

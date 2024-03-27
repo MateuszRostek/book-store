@@ -74,7 +74,6 @@ public class ShoppingCartServiceTest {
                 nonExistingCartItemBookId, 2);
         ShoppingCart modelCart = getTestShoppingCart(validUserId);
         CartItem modelItem = getTestCartItemFromRequest(modelCart, requestDto);
-
         ShoppingCartDto expected = getTestShoppingCartDtoFromModel(modelCart);
         expected.cartItems().add(
                 new CartItemDto(
@@ -108,7 +107,6 @@ public class ShoppingCartServiceTest {
                 existingCartItemBookId, 2);
         ShoppingCart modelCart = getTestShoppingCart(validUserId);
         CartItem cartItem = getTestCartItemFromRequest(modelCart, requestDto);
-
         CartItem existingCartItem = modelCart.getCartItems().stream()
                 .filter(ci -> ci.getBook().getId().equals(cartItem.getBook().getId()))
                 .findFirst()

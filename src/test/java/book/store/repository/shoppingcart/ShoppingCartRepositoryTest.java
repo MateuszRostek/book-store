@@ -72,7 +72,7 @@ public class ShoppingCartRepositoryTest {
         book.setId(10L);
         book.setTitle("Basic Book");
         book.setAuthor("Basic Author");
-        book.setIsbn("9911-123");
+        book.setIsbn("9911-321");
         book.setPrice(new BigDecimal("20.50"));
         book.setDescription("Basic Description");
         book.setCoverImage("images.com/image.jpg");

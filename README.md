@@ -91,10 +91,21 @@ This diagram illustrates the relationships between different entities in the dat
 ## Setup Instructions
 
 1. Clone the repository to your local machine.
-2. Ensure you have Docker installed.
+2. Ensure you have Docker installed and docker engine running.
 3. Navigate to the project directory.
-4. Run `docker-compose up` to start the application and MySQL database.
-5. Access the API documentation at `http://localhost:8080/swagger-ui.html`.
+4. Run `./mvnw clean package` to create a .jar file.
+5. In the .env file you should provide necessary DB and Docker variables, here is an example:  
+MYSQLDB_USER=root  
+MYSQLDB_ROOT_PASSWORD=1234  
+MYSQLDB_DATABASE=test  
+MYSQLDB_LOCAL_PORT=3307  
+MYSQLDB_DOCKER_PORT=3306  
+SPRING_LOCAL_PORT=8080  
+SPRING_DOCKER_PORT=8080  
+DEBUG_PORT=5005  
+6. Run `docker compose up -d --build` to start the application and MySQL database.
+7. Feel free to test my application using Postman/Swagger.
+8. To stop and remove containers use `docker compose down`.
 
 ## Rising to Challenges
 

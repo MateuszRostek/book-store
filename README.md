@@ -107,7 +107,7 @@ DEBUG_PORT=5005
 ```
 6. Run `docker compose up -d --build` to start the application and MySQL database.
 7. Feel free to test my application using Postman/Swagger.  
-   (Postman) Keep in mind that you have to pass Authorization (Bearer Token) that you receive when logging in)  
+   **Postman**: Keep in mind that you have to pass Authorization (Bearer Token) that you receive when logging in)  
   Do you want to test admin features? here are credentials of test admin user:  
    ```json
    {

@@ -39,47 +39,54 @@ Feel free to explore the Bookstore API yourself using my Postman collection. If 
 
 Below, you'll find detailed explanations for each endpoint in the Postman collection, helping you navigate and understand the functionalities of the Bookstore API more effectively.
 
+
+### Access to endpoints
+🟩 - publicly available  
+🟨 - for logged-in users  
+🟥 - for administrators  
+
+
 ### User Management
 
-- `POST: /api/auth/registration` - **User Registration**: New customers can register with their email, password, and personal details.
-- `POST: /api/auth/login` - **User Authentication**: Secure login mechanism for registered users.
+- 🟩 `POST: /api/auth/registration` - **User Registration**: New customers can register with their email, password, and personal details.
+- 🟩 `POST: /api/auth/login` - **User Authentication**: Secure login mechanism for registered users.
 
 ### Book Management
 
-- `GET: /api/books` - **Retrieve Book Catalog**: Users can browse the catalog of available books.
-- `GET: /api/books/{id}` - **View Book Details**: Users can also check information about each book individually.
-- `GET: /api/books/search` - **Search Books**: Users can search for books based on various parameters.
-- `POST: /api/books` - **Add New Book**: Admin users can add new books to the catalog.
-- `PUT: /api/books/{id}` - **Update Book Details**: Admin users can update existing book details.
-- `DELETE: /api/books/{id}` - **Delete Book**: Admin users can remove books from the catalog.
+- 🟨 `GET: /api/books` - **Retrieve Book Catalog**: Users can browse the catalog of available books.
+- 🟨 `GET: /api/books/{id}` - **View Book Details**: Users can also check information about each book individually.
+- 🟨 `GET: /api/books/search` - **Search Books**: Users can search for books based on various parameters.
+- 🟥 `POST: /api/books` - **Add New Book**: Admin users can add new books to the catalog.
+- 🟥 `PUT: /api/books/{id}` - **Update Book Details**: Admin users can update existing book details.
+- 🟥 `DELETE: /api/books/{id}` - **Delete Book**: Admin users can remove books from the catalog.
 
 ### Category Management
 
-- `GET: /api/categories` - **Retrieve Categories**: Users can view the list of available categories.
-- `GET: /api/categories/{id}` - **View Category**: Users can also check information about each category individually.
-- `GET: /api/categories/{id}/books` - **Get Books by Category**: Users can retrieve all books belonging to a specific category.
-- `POST: /api/categories` - **Create Category**: Admin users can create new categories for books.
-- `PUT: /api/categories/{id}` - **Update Category**: Admin users can update category details.
-- `DELETE: /api/categories/{id}` - **Delete Category**: Admin users can delete categories.
+- 🟨 `GET: /api/categories` - **Retrieve Categories**: Users can view the list of available categories.
+- 🟨 `GET: /api/categories/{id}` - **View Category**: Users can also check information about each category individually.
+- 🟨 `GET: /api/categories/{id}/books` - **Get Books by Category**: Users can retrieve all books belonging to a specific category.
+- 🟥 `POST: /api/categories` - **Create Category**: Admin users can create new categories for books.
+- 🟥 `PUT: /api/categories/{id}` - **Update Category**: Admin users can update category details.
+- 🟥 `DELETE: /api/categories/{id}` - **Delete Category**: Admin users can delete categories.
 
 ### Shopping Cart
 
-- `GET: /api/cart` - **View Cart**: Users can view the contents of their shopping cart.
-- `POST: /api/cart` - **Add to Cart**: Users can add books to their shopping cart.
-- `PUT: /api/cart/cart-items/{id}` - **Update Cart**: Users can update the quantity of a specific item in their cart.
-- `DELETE: /api/cart/cart-items/{id}` - **Remove from Cart**: Users can remove a specific item from their cart.
+- 🟨 `GET: /api/cart` - **View Cart**: Users can view the contents of their shopping cart.
+- 🟨 `POST: /api/cart` - **Add to Cart**: Users can add books to their shopping cart.
+- 🟨 `PUT: /api/cart/cart-items/{id}` - **Update Cart**: Users can update the quantity of a specific item in their cart.
+- 🟨 `DELETE: /api/cart/cart-items/{id}` - **Remove from Cart**: Users can remove a specific item from their cart.
 
 ### Order Management
 
-- `GET: /api/orders` - **View Orders History**: Users can view all their orders history.
-- `GET: /api/orders/{id}/items` - **View Order Items**: Users can view all items included in a specific order.
-- `GET: /api/orders/{orderId}/items/{itemId}` - **View Specific Order Item**: Users can check details of a particular item within an order.
-- `POST: /api/orders` - **Place Order**: Users can place orders for the books in their cart.
-- `PATCH: /api/orders/{id}` - **Update Order Status**: Admin users can update the status of orders.
+- 🟨 `GET: /api/orders` - **View Orders History**: Users can view all their orders history.
+- 🟨 `GET: /api/orders/{id}/items` - **View Order Items**: Users can view all items included in a specific order.
+- 🟨 `GET: /api/orders/{orderId}/items/{itemId}` - **View Specific Order Item**: Users can check details of a particular item within an order.
+- 🟨 `POST: /api/orders` - **Place Order**: Users can place orders for the books in their cart.
+- 🟥 `PATCH: /api/orders/{id}` - **Update Order Status**: Admin users can update the status of orders.
 
 ## Video Presentation
 
-For a visual demonstration of how the Bookstore API works and its various functionalities, you can watch the video presentation available [here](TODO!!!). In this presentation, I walk through the key features of the application, demonstrate its usage with examples, and provide insights into the development process.
+For a visual demonstration of how the Bookstore API works and its various functionalities, you can watch the video presentation available [here](https://www.loom.com/share/2464c0541478423c9b88868330317bd8). In this presentation, I walk through the key features of the application, demonstrate its usage with examples, and provide insights into the development process.
 
 ## SQL Database Diagram
 Below is a simplified representation of the database schema used in the Bookstore API:
@@ -107,8 +114,8 @@ DEBUG_PORT=5005
 ```
 6. Run `docker compose up -d --build` to start the application and MySQL database.
 7. Feel free to test my application using Postman/Swagger.  
-   **Postman**: Keep in mind that you have to pass Authorization (Bearer Token) that you receive when logging in)  
-  Do you want to test admin features? here are credentials of test admin user:  
+   **Postman**: Keep in mind that you have to pass Authorization (Bearer Token) that you receive when logging in.  
+  Do you want to test admin features? Here are credentials of sample admin:  
    ```json
    {
    "email": "matthew@admin.com",

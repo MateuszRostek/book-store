@@ -33,7 +33,7 @@ Introducing the Bookstore API - Your Online Bookshop! This project is designed t
 
 ### Postman
 
-Feel free to explore the Bookstore API yourself using our Postman collection. If you have any questions or encounter any issues, don't hesitate to reach out. Happy testing!
+Feel free to explore the Bookstore API yourself using my Postman collection. If you have any questions or encounter any issues, don't hesitate to reach out. Happy testing!
 
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://god.gw.postman.com/run-collection/32395887-2c05542b-d87d-48ed-be3c-6eca6b546f65?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D32395887-2c05542b-d87d-48ed-be3c-6eca6b546f65%26entityType%3Dcollection%26workspaceId%3D1b3a52a2-587d-4ebc-940e-048110041ee1)
 
@@ -91,10 +91,11 @@ This diagram illustrates the relationships between different entities in the dat
 ## Setup Instructions
 
 1. Clone the repository to your local machine.
-2. Ensure you have Docker installed and docker engine running.
+2. Ensure you have Docker installed and Docker Engine running.
 3. Navigate to the project directory.
 4. Run `./mvnw clean package` to create a .jar file.
 5. In the .env file you should provide necessary DB and Docker variables, here is an example:  
+```mysql
 MYSQLDB_USER=root  
 MYSQLDB_ROOT_PASSWORD=1234  
 MYSQLDB_DATABASE=test  
@@ -102,14 +103,23 @@ MYSQLDB_LOCAL_PORT=3307
 MYSQLDB_DOCKER_PORT=3306  
 SPRING_LOCAL_PORT=8080  
 SPRING_DOCKER_PORT=8080  
-DEBUG_PORT=5005  
+DEBUG_PORT=5005
+```
 6. Run `docker compose up -d --build` to start the application and MySQL database.
-7. Feel free to test my application using Postman/Swagger.
+7. Feel free to test my application using Postman/Swagger.  
+   (Postman) Keep in mind that you have to pass Authorization (Bearer Token) that you receive when logging in)  
+  Do you want to test admin features? here are credentials of test admin user:  
+   ```json
+   {
+   "email": "matthew@admin.com",
+   "password": "1234"
+   }
+   ```
 8. To stop and remove containers use `docker compose down`.
 
 ## Rising to Challenges
 
-Since this is my first relatively comprehensive project, I encountered a few difficulties while working with it. Some of which I was able to deal with fairly quickly, but some of which were able to keep me up at night, solving the most difficult problems was what satisfied me the most. The issues I encountered allowed me to develop the ability to effectively search for solutions, whether using the information in the available documentation, the reliable Stack Overflow or sites like Baeldung. Thanks to the knowledge I gained, I know that the future obstacles in my path I will be able to overcome more and more efficiently.
+Since this is my first relatively comprehensive project, I encountered a few difficulties while working on it. Some of which I was able to deal with fairly quickly, but some of which were able to keep me up at night, solving the most difficult problems was what satisfied me the most. The issues I encountered allowed me to develop the ability to effectively search for solutions, whether using the information in the available documentation, the reliable Stack Overflow or sites like Baeldung. Thanks to the knowledge I gained, I know that the future obstacles in my path I will be able to overcome more and more efficiently.
 
 ## Contact
 Thank you for taking the time to explore my Bookstore API!

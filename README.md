@@ -96,9 +96,11 @@ Below is a simplified representation of the database schema used in the Bookstor
 This diagram illustrates the relationships between different entities in the database, including tables for users, books, categories, shopping carts, orders, and more.
 
 ## Setup Instructions
+Ensure you have Docker and JDK installed  
+In this project I've used `Docker Desktop 4.28.0 (139021)` and `Oracle OpenJDK version 20.0.2`
 
 1. Clone the repository to your local machine.
-2. Ensure you have Docker installed and Docker Engine running.
+2. Verify you have Docker Engine running.
 3. Navigate to the project directory.
 4. Run `./mvnw clean package` to create a .jar file.
 5. In the .env file you should provide necessary DB and Docker variables, here is an example:  

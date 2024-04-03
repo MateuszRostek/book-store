@@ -25,3 +25,5 @@ databaseChangeLog:
       file: /db/changelog/changes/12-create-order-items-table.yaml
   - include:
       file: /db/changelog/changes/13-update-books-price-column-type.yaml
+  - include:
+      file: /db/changelog/changes/14-insert-users-to-shopping-carts.yaml

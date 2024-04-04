@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users-to-shopping-carts
+      author: mrostek
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column: {name: user_id, valueNumeric: 1}
+              - column: {name: is_deleted, valueNumeric: 0}
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column: {name: user_id, valueNumeric: 2}
+              - column: {name: is_deleted, valueNumeric: 0}
